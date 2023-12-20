@@ -1,6 +1,5 @@
 import scrapy, psycopg2, datetime
 from scrapy_playwright.page import PageMethod
-from pathlib import Path
 connectionString = "postgresql://postgres:rnR0uiDqNVWiBL1C@db.xirdbhvrdyarslorlufu.supabase.co:5432/postgres"
 try:
     connection = psycopg2.connect(connectionString)
