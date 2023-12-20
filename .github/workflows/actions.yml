@@ -1,4 +1,4 @@
-name: RunPythonScript
+name: IPOCrawler
 
 on:
   schedule:
