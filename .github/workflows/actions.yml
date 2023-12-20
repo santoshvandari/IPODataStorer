@@ -1,4 +1,4 @@
-name: IPOCrawler
+name: IPOInfoCrawler
 
 on:
   schedule:
