@@ -5,7 +5,7 @@ connectionString = "postgresql://postgres:rnR0uiDqNVWiBL1C@db.xirdbhvrdyarslorlu
 try:
     connection = psycopg2.connect(connectionString)
     cursor = connection.cursor()
-    cursor.execute('truncate ipodetails;')
+    cursor.execute('truncate ipoinfo;')
     print("Connected to PostgreSQL database successfully!")
 except Exception as e:
     print(f"Error connecting to database: {e}")
