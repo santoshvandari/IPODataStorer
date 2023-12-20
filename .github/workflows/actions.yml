@@ -2,7 +2,7 @@ name: IPOCrawler
 
 on:
   schedule:
-    - cron: '0 9 * * *' # Runs at 11:00 AM Nepal Standard Time (UTC +5:45)
+    - cron: '0 12 * * *' # Runs at 11:00 AM Nepal Standard Time (UTC +5:45)
 
 jobs:
   run-script:
@@ -15,5 +15,7 @@ jobs:
           python-version: '3.10' # Update based on your needs
       - name: Install dependencies
         run: pip install -r requirements.txt
+      - name: Install playwright
+        run : playwright install
       - name: Run Python script
         run: scrapy crawl ipo
