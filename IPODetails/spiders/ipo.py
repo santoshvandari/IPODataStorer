@@ -41,7 +41,8 @@ class PwspiderSpider(scrapy.Spider):
             openingdate= datetime.datetime.strptime(openingdatestr, '%Y-%m-%d').date()
             closingdatestr = data.css('td:nth-child(6)::text').get()
             closingdate= datetime.datetime.strptime(closingdatestr, '%Y-%m-%d').date()
-            if(closingdate>=datetime.date.today()):
+            # if(closingdate>=datetime.date.today()):
+            if(True):
                 
                 # Storing in the Database
                 query=f"INSERT INTO ipodetails VALUES('{name}',{totalunit},'{openingdate}','{closingdate}');"
