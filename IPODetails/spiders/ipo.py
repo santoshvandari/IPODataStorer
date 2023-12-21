@@ -43,8 +43,10 @@ class PwspiderSpider(scrapy.Spider):
             openingdate = datetime.datetime.strptime(openingdatestr, '%Y-%m-%d').date()
             closingdatestr = (data.css('td:nth-child(7)::text').get()).replace('/','-')
             closingdate = datetime.datetime.strptime(closingdatestr, '%Y-%m-%d').date()
-            if(closingdate>=date):
-                query=f"INSERT INTO ipoinfo VALUES('{companyname}','{symbol}',{totalissueunit},'{issuetype}','{issuemanager}','{openingdate}','{closingdate}');"
-                # print(query)
-                cursor.execute(query)
+            # check all are not empty
+            if companyname and symbol and totalissueunit and issuetype and issuemanager and openingdate and closingdate:
+                if(closingdate>=date):
+                    query=f"INSERT INTO ipoinfo VALUES('{companyname}','{symbol}',{totalissueunit},'{issuetype}','{issuemanager}','{openingdate}','{closingdate}');"
+                    # print(query)
+                    cursor.execute(query)
         connection.commit()
