@@ -41,6 +41,7 @@ class PwspiderSpider(scrapy.Spider):
             issuemanager=data.css('td:nth-child(5)::text').get()
             openingdate = (data.css('td:nth-child(6)::text').get()).replace('/','-')
             closingdate = (data.css('td:nth-child(7)::text').get()).replace('/','-')
+            closingdate = datetime.datetime.strptime(closingdate, '%Y-%m-%d').date()
             if(closingdate>=date):
                 query=f"INSERT INTO ipoinfo VALUES('{companyname}','{symbol}',{totalissueunit},'{issuetype}','{issuemanager}','{openingdate}','{closingdate}');"
                 # print(query)
