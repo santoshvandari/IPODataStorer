@@ -19,7 +19,6 @@ class PwspiderSpider(scrapy.Spider):
                                 playwright=True,
                                 playwright_include_page=True,
                                 playwright_page_methods=[
-                                    # This where we can implement scrolling if we want
                                     PageMethod('wait_for_selector', 'table.display.table-bordered.mb-5 tbody tr'),
                                 ]
                             )
@@ -44,6 +43,6 @@ class PwspiderSpider(scrapy.Spider):
             closingdate = (data.css('td:nth-child(7)::text').get()).replace('/','-')
             if(closingdate>=date):
                 query=f"INSERT INTO ipoinfo VALUES('{companyname}','{symbol}',{totalissueunit},'{issuetype}','{issuemanager}','{openingdate}','{closingdate}');"
-                print(query)
+                # print(query)
                 cursor.execute(query)
         connection.commit()
