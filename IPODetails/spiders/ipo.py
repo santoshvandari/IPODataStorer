@@ -1,52 +1,73 @@
-import scrapy, psycopg2, datetime
+import scrapy
+import psycopg2
+import datetime
 from scrapy_playwright.page import PageMethod
-connectionString = "postgresql://postgres:rnR0uiDqNVWiBL1C@db.xirdbhvrdyarslorlufu.supabase.co:5432/postgres"
-try:
-    connection = psycopg2.connect(connectionString)
-    cursor = connection.cursor()
-    cursor.execute('truncate ipoinfo;')
-    print("Connected to PostgreSQL database successfully!")
-except Exception as e:
-    print(f"Error connecting to database: {e}")
-    exit(1)
+
 class PwspiderSpider(scrapy.Spider):
     name = 'ipo'
     allowed_domains = ['nepsebajar.com']
     start_urls = ['https://www.nepsebajar.com/ipo-pipelinewewe']
-    def start_requests(self):
-        yield scrapy.Request('https://www.nepsebajar.com/ipo-pipelinewewe',
-                            meta=dict(
-                                playwright=True,
-                                playwright_include_page=True,
-                                playwright_page_methods=[
-                                    PageMethod('wait_for_selector', 'table.display.table-bordered.mb-5 tbody tr'),
-                                ]
-                            )
-                            )
-    async def parse(self, response):
-        tabledata= response.css('table#example tbody tr')
-        date = datetime.date.today()
-        for data in tabledata:
-            companyname = data.css('td:nth-child(1) a::text').get()
-            symbol = data.css('td:nth-child(2) a::text').get()
-            totalissueunit = int(data.css('td:nth-child(3)::text').get())
-            issuetypeinfo=(data.css('td:nth-child(4)::text').get())
-            if issuetypeinfo.find('-')!=-1:
-                issuetypeinfo=(data.css('td:nth-child(4)::text').get()).split('-')[1]
 
-            if issuetypeinfo.find('For')!=-1:
-                issuetype = issuetypeinfo.split('For')[1]
+    def __init__(self, *args, **kwargs):
+        super(PwspiderSpider, self).__init__(*args, **kwargs)
+        self.connection = None
+        try:
+            self.connection = psycopg2.connect(
+                "postgresql://postgres:rnR0uiDqNVWiBL1C@db.xirdbhvrdyarslorlufu.supabase.co:5432/postgres"
+            )
+            self.cursor = self.connection.cursor()
+            self.cursor.execute('DELETE FROM ipoinfo;')
+            print("Connected to PostgreSQL database successfully!")
+        except Exception as e:
+            print(f"Error connecting to database: {e}")
+            self.close_spider()
+
+    def close_spider(self, reason='finished'):
+        if self.connection:
+            self.connection.commit()
+            self.connection.close()
+            print("Closed PostgreSQL connection.")
+
+    def start_requests(self):
+        yield scrapy.Request(
+            'https://www.nepsebajar.com/ipo-pipelinewewe',
+            meta=dict(
+                playwright=True,
+                playwright_include_page=True,
+                playwright_page_methods=[
+                    PageMethod('wait_for_selector', 'table.display.table-bordered.mb-5 tbody tr'),
+                ]
+            )
+        )
+
+    async def parse(self, response):
+        date = datetime.date.today()
+        table_data = response.css('table#example tbody tr')
+
+        for data in table_data:
+            company_name = data.css('td:nth-child(1) a::text').get()
+            symbol = data.css('td:nth-child(2) a::text').get()
+            total_issue_unit = int(data.css('td:nth-child(3)::text').get())
+            issue_type_info = data.css('td:nth-child(4)::text').get().split('-')[1].strip()
+
+            if 'For' in issue_type_info:
+                issue_type = issue_type_info.split('For')[1].strip()
             else:
-                issuetype = issuetypeinfo
-            issuemanager=data.css('td:nth-child(5)::text').get()
-            openingdatestr = (data.css('td:nth-child(6)::text').get()).replace('/','-')
-            openingdate = datetime.datetime.strptime(openingdatestr, '%Y-%m-%d').date()
-            closingdatestr = (data.css('td:nth-child(7)::text').get()).replace('/','-')
-            closingdate = datetime.datetime.strptime(closingdatestr, '%Y-%m-%d').date()
-            # check all are not empty
-            if companyname and symbol and totalissueunit and issuetype and issuemanager and openingdate and closingdate:
-                if(closingdate>=date):
-                    query=f"INSERT INTO ipoinfo VALUES('{companyname}','{symbol}',{totalissueunit},'{issuetype}','{issuemanager}','{openingdate}','{closingdate}');"
-                    # print(query)
-                    cursor.execute(query)
-        connection.commit()
+                issue_type = issue_type_info
+
+            issue_manager = data.css('td:nth-child(5)::text').get()
+            opening_date_str = data.css('td:nth-child(6)::text').get().replace('/', '-')
+            opening_date = datetime.datetime.strptime(opening_date_str, '%Y-%m-%d').date()
+            closing_date_str = data.css('td:nth-child(7)::text').get().replace('/', '-')
+            closing_date = datetime.datetime.strptime(closing_date_str, '%Y-%m-%d').date()
+
+            # Check if all fields are not empty
+            if all([company_name, symbol, total_issue_unit, issue_type, issue_manager, opening_date, closing_date]):
+                # if closing_date >= date:
+                if True:
+                    query = (
+                        f"INSERT INTO ipoinfo VALUES "
+                        f"('{company_name}','{symbol}',{total_issue_unit},'{issue_type}',"
+                        f"'{issue_manager}','{opening_date}','{closing_date}');"
+                    )
+                    self.cursor.execute(query)
