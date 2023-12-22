@@ -2,7 +2,7 @@ name: IPOInformationCrawler
 
 on:
   schedule:
-    - cron: '0 11 * * *' # Runs at 11:00 AM Nepal Standard Time (UTC +5:45)
+    - cron: '0 12 * * *' # Runs at 11:00 AM Nepal Standard Time (UTC +5:45)
 jobs:
   run-script:
     runs-on: ubuntu-latest
