@@ -22,10 +22,6 @@ class PwspiderSpider(scrapy.Spider):
             print(f"Error connecting to database: {e}")
             self.close_spider()
 
-    def close_spider(self, reason='finished'):
-        if self.connection:
-            self.connection.close()
-            print("Closed PostgreSQL connection.")
 
     def start_requests(self):
         yield scrapy.Request(
@@ -73,3 +69,7 @@ class PwspiderSpider(scrapy.Spider):
                     print(query)
                     self.cursor.execute(query)
         self.connection.commit()
+        print("Data Writed Successfully!")
+        if self.connection:
+            self.connection.close()
+            print("Closed PostgreSQL connection.")
