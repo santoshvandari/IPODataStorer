@@ -24,7 +24,6 @@ class PwspiderSpider(scrapy.Spider):
 
     def close_spider(self, reason='finished'):
         if self.connection:
-            self.connection.commit()
             self.connection.close()
             print("Closed PostgreSQL connection.")
 
@@ -48,8 +47,9 @@ class PwspiderSpider(scrapy.Spider):
             company_name = data.css('td:nth-child(1) a::text').get()
             symbol = data.css('td:nth-child(2) a::text').get()
             total_issue_unit = int(data.css('td:nth-child(3)::text').get())
-            issue_type_info = data.css('td:nth-child(4)::text').get().split('-')[1].strip()
-
+            issue_type_info = data.css('td:nth-child(4)::text').get().strip()
+            if '-' in issue_type_info:
+                issue_type_info = data.css('td:nth-child(4)::text').get().split('-')[1].strip()
             if 'For' in issue_type_info:
                 issue_type = issue_type_info.split('For')[1].strip()
             else:
@@ -70,4 +70,6 @@ class PwspiderSpider(scrapy.Spider):
                         f"('{company_name}','{symbol}',{total_issue_unit},'{issue_type}',"
                         f"'{issue_manager}','{opening_date}','{closing_date}');"
                     )
+                    print(query)
                     self.cursor.execute(query)
+        self.connection.commit()
