@@ -16,7 +16,7 @@ class PwspiderSpider(scrapy.Spider):
                 "postgresql://postgres:rnR0uiDqNVWiBL1C@db.xirdbhvrdyarslorlufu.supabase.co:5432/postgres"
             )
             self.cursor = self.connection.cursor()
-            self.cursor.execute('DELETE FROM ipoinfo;')
+            self.cursor.execute('DELETE FROM ipoinfodetails;')
             print("Connected to PostgreSQL database successfully!")
         except Exception as e:
             print(f"Error connecting to database: {e}")
@@ -60,10 +60,10 @@ class PwspiderSpider(scrapy.Spider):
 
             # Check if all fields are not empty
             if all([company_name, symbol, total_issue_unit, issue_type, issue_manager, opening_date, closing_date]):
-                # if closing_date >= date:
-                if True:
+                if closing_date >= date:
+                # if True:
                     query = (
-                        f"INSERT INTO ipoinfo VALUES "
+                        f"INSERT INTO ipoinfodetails VALUES "
                         f"('{company_name}','{symbol}',{total_issue_unit},'{issue_type}',"
                         f"'{issue_manager}','{opening_date}','{closing_date}');"
                     )
