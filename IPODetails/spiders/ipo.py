@@ -31,8 +31,7 @@ class PwspiderSpider(scrapy.Spider):
                 playwright_include_page=True,
                 playwright_page_methods=[
                     PageMethod('wait_for_selector', 'table.display.table-bordered.mb-5 tbody tr', timeout=60000),
-                ]
-                
+                ]   
             )
         )
 
@@ -41,8 +40,8 @@ class PwspiderSpider(scrapy.Spider):
         table_data = response.css('table#example tbody tr')
 
         for data in table_data:
-            company_name = data.css('td:nth-child(1) a::text').get()
-            symbol = data.css('td:nth-child(2) a::text').get()
+            company_name = (data.css('td:nth-child(1) a::text').get()).strip()
+            symbol = (data.css('td:nth-child(2) a::text').get()).strip()
             total_issue_unit = int(data.css('td:nth-child(3)::text').get())
             issue_type_info = data.css('td:nth-child(4)::text').get().strip()
             if '-' in issue_type_info:
@@ -52,7 +51,7 @@ class PwspiderSpider(scrapy.Spider):
             else:
                 issue_type = issue_type_info
 
-            issue_manager = data.css('td:nth-child(5)::text').get()
+            issue_manager = (data.css('td:nth-child(5)::text').get()).strip()
             opening_date_str = data.css('td:nth-child(6)::text').get().replace('/', '-')
             opening_date = datetime.datetime.strptime(opening_date_str, '%Y-%m-%d').date()
             closing_date_str = data.css('td:nth-child(7)::text').get().replace('/', '-')
