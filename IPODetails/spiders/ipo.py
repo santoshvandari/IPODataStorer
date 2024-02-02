@@ -31,7 +31,7 @@ class PwspiderSpider(scrapy.Spider):
                 playwright=True,
                 playwright_include_page=True,
                 playwright_page_methods=[
-                    PageMethod('wait_for_selector', 'table.display.table-bordered.mb-5 tbody tr', timeout=60000),
+                    PageMethod('wait_for_selector', 'table.display.table-bordered.mb-5 tbody tr', timeout=50000),
                 ]   
             )
         )
