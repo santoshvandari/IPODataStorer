@@ -3,6 +3,7 @@ import psycopg2
 import datetime
 from scrapy_playwright.page import PageMethod
 
+# connectionString = "postgres://postgres.xirdbhvrdyarslorlufu:9XEq4EPhvJzDXfA7@aws-0-ap-south-1.pooler.supabase.com:5432/postgres"
 class PwspiderSpider(scrapy.Spider):
     name = 'ipo'
     allowed_domains = ['nepsebajar.com']
@@ -13,7 +14,7 @@ class PwspiderSpider(scrapy.Spider):
         self.connection = None
         try:
             self.connection = psycopg2.connect(
-                "postgresql://postgres:rnR0uiDqNVWiBL1C@db.xirdbhvrdyarslorlufu.supabase.co:5432/postgres"
+                "postgres://postgres.xirdbhvrdyarslorlufu:9XEq4EPhvJzDXfA7@aws-0-ap-south-1.pooler.supabase.com:5432/postgres"
             )
             self.cursor = self.connection.cursor()
             self.cursor.execute('DELETE FROM ipoinfodetails;')
