@@ -27,13 +27,6 @@ class PwspiderSpider(scrapy.Spider):
     def start_requests(self):
         yield scrapy.Request(
             'https://www.nepsebajar.com/ipo-pipelinewewe', callback=self.parse
-            # meta=dict(
-            #     playwright=True,
-            #     playwright_include_page=True,
-            #     playwright_page_methods=[
-            #         PageMethod('wait_for_selector', 'table.display.table-bordered.mb-5 tbody tr', timeout=50000),
-            #     ]   
-            # )
         )
 
     async def parse(self, response):
@@ -60,8 +53,8 @@ class PwspiderSpider(scrapy.Spider):
 
             # Check if all fields are not empty
             if all([company_name, symbol, total_issue_unit, issue_type, issue_manager, opening_date, closing_date]):
-                if closing_date >= date:
-                # if True:
+                # if closing_date >= date:
+                if True:
                     query = (
                         f"INSERT INTO ipoinfodetails VALUES "
                         f"('{company_name}','{symbol}',{total_issue_unit},'{issue_type}',"

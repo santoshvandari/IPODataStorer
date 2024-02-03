@@ -15,11 +15,11 @@ NEWSPIDER_MODULE = 'IPODetails.spiders'
 
 
 ### Playwright settings
-DOWNLOAD_HANDLERS = {
-    "http": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
-    "https": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
-}
-TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
+# DOWNLOAD_HANDLERS = {
+#     "http": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
+#     "https": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
+# }
+# TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 ###
 
 
