@@ -1,2 +1,4 @@
 /venv
 /data.txt
+/IPODetails/__pycache__
+/IPODetails/spiders/__pycache__
