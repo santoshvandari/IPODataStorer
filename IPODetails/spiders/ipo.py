@@ -32,8 +32,11 @@ class PwspiderSpider(scrapy.Spider):
     async def parse(self, response):
         date = datetime.date.today()
         table_data = response.css('table#example tbody tr')
-
+        counter = 0
         for data in table_data:
+            if counter>=11:
+                break
+            counter += 1
             company_name = (data.css('td:nth-child(1) a::text').get()).strip()
             symbol = (data.css('td:nth-child(2) a::text').get()).strip()
             total_issue_unit = int(data.css('td:nth-child(3)::text').get())

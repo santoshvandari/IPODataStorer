@@ -24,6 +24,10 @@ NEWSPIDER_MODULE = 'IPODetails.spiders'
 
 
 
+## settings.py
+
+DOWNLOAD_DELAY = 2  # 2 seconds of delay
+
 
 
 
