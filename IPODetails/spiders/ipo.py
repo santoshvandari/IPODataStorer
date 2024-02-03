@@ -1,7 +1,7 @@
 import scrapy
 import psycopg2
 import datetime
-from scrapy_playwright.page import PageMethod
+# from scrapy_playwright.page import PageMethod
 
 # connectionString = "postgres://postgres.xirdbhvrdyarslorlufu:9XEq4EPhvJzDXfA7@aws-0-ap-south-1.pooler.supabase.com:5432/postgres"
 class PwspiderSpider(scrapy.Spider):
@@ -26,14 +26,14 @@ class PwspiderSpider(scrapy.Spider):
 
     def start_requests(self):
         yield scrapy.Request(
-            'https://www.nepsebajar.com/ipo-pipelinewewe',
-            meta=dict(
-                playwright=True,
-                playwright_include_page=True,
-                playwright_page_methods=[
-                    PageMethod('wait_for_selector', 'table.display.table-bordered.mb-5 tbody tr', timeout=50000),
-                ]   
-            )
+            'https://www.nepsebajar.com/ipo-pipelinewewe', callback=self.parse
+            # meta=dict(
+            #     playwright=True,
+            #     playwright_include_page=True,
+            #     playwright_page_methods=[
+            #         PageMethod('wait_for_selector', 'table.display.table-bordered.mb-5 tbody tr', timeout=50000),
+            #     ]   
+            # )
         )
 
     async def parse(self, response):
