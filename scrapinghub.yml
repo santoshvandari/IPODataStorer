@@ -1,7 +1,13 @@
+projects:
+  main: 736748
+
 requirements:
   file: requirements.txt
-stacks:
-  default: scrapy:2.11
+
+stack:
+  stacks: scrapy:2.11
 
 scripts:
-  AfterDeployment: playwright install
+  before_deploy: ./deployment.sh
+
+script: kumo-entrypoint
