@@ -1,5 +1,0 @@
-#!/bin/sh
-
-# Install Playwright
-playwright install
-

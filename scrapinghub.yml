@@ -1,0 +1,14 @@
+projects:
+  main: ./project
+
+stack:
+  image: scrapinghub/scrapinghub-stack-scrapy:2.0
+
+requirements:
+  file: ./requirements.txt
+
+
+script: kumo-entrypoint
+scripts:
+  before_deploy: playwright install
+runtime: python3.8
