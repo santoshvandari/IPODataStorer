@@ -1,14 +1,7 @@
-projects:
-  main: ./project
-
-stack:
-  image: scrapinghub/scrapinghub-stack-scrapy:2.0
-
 requirements:
-  file: ./requirements.txt
+  file: requirements.txt
+stacks:
+  default: scrapy:2.11
 
-
-script: kumo-entrypoint
 scripts:
-  before_deploy: playwright install
-runtime: python3.8
+  AfterDeployment: playwright install
