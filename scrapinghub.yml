@@ -5,4 +5,8 @@ stack:
   stacks: scrapy:2.11
 
 scripts:
-  before_deploy: ./deployment.sh
+  steps:
+    - name : playwright install
+      run: pip install playwright
+    - name : playwright install
+      run: playwright install
