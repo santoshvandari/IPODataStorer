@@ -6,7 +6,7 @@ stack:
 
 scripts:
   steps:
-    - name : playwright install
+    - name: playwright install
       run: pip install playwright
-    - name : playwright install
+    - name: run playwright install
       run: playwright install
