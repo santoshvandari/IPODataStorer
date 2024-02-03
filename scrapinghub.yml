@@ -1,13 +1,10 @@
-projects:
-  main: 736748
-
 requirements:
   file: requirements.txt
 
 stack:
   stacks: scrapy:2.11
 
-scripts:
-  before_deploy: ./deployment.sh
-
 script: kumo-entrypoint
+
+scripts:
+  before_deploy: deployment.sh
