@@ -1,12 +1,13 @@
-requirements:
-  file: requirements.txt
 
+requirements:
+  file: ./requirements.txt
 stack:
-  stacks: scrapy:2.11
+  default: scrapy:2.11
+
+script: kumo-entrypoint
 
 scripts:
-  steps:
-    - name: playwright install
-      run: pip install playwright
-    - name: run playwright install
-      run: playwright install
+  before_deploy: ./scripts/before_deploy.sh
+
+
+runtime: python3.8
