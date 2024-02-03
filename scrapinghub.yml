@@ -4,7 +4,5 @@ requirements:
 stack:
   stacks: scrapy:2.11
 
-script: kumo-entrypoint
-
 scripts:
-  before_deploy: deployment.sh
+  before_deploy: ./deployment.sh
