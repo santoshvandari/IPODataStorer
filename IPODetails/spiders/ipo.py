@@ -60,8 +60,8 @@ class PwspiderSpider(scrapy.Spider):
 
             # Check if all fields are not empty
             if all([company_name, symbol, total_issue_unit, issue_type, issue_manager, opening_date, closing_date]):
-                if closing_date >= date:
-                # if True:
+                # if closing_date >= date:
+                if True:
                     query = (
                         f"INSERT INTO ipoinfodetails VALUES "
                         f"('{company_name}','{symbol}',{total_issue_unit},'{issue_type}',"
