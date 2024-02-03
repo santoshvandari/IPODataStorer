@@ -1,6 +1,6 @@
 import scrapy
 import psycopg2
-import datetime,os
+import datetime
 from scrapy_playwright.page import PageMethod
 
 # connectionString = "postgres://postgres.xirdbhvrdyarslorlufu:9XEq4EPhvJzDXfA7@aws-0-ap-south-1.pooler.supabase.com:5432/postgres"
@@ -13,7 +13,6 @@ class PwspiderSpider(scrapy.Spider):
         super(PwspiderSpider, self).__init__(*args, **kwargs)
         self.connection = None
         try:
-            os.system("playwright install")
             self.connection = psycopg2.connect(
                 "postgres://postgres.xirdbhvrdyarslorlufu:9XEq4EPhvJzDXfA7@aws-0-ap-south-1.pooler.supabase.com:5432/postgres"
             )
