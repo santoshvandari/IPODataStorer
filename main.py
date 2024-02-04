@@ -5,6 +5,7 @@ import requests,datetime,psycopg2
 url="https://www.nepsebajar.com/ipo-pipelinewewe"
 req=requests.get(url)
 soup=BeautifulSoup(req.text, "html.parser")
+print(soup.prettify())
 tabledata=soup.select("table#example tbody tr")
 
 # Connecting With The Database 
@@ -18,6 +19,8 @@ try:
 except Exception as e:
     print(f"Error connecting to database: {e}")
     exit(1)
+
+print(tabledata)
 
 date=datetime.date.today()
 counter=0
@@ -43,7 +46,7 @@ for data in tabledata:
     closingdatestr = (data.select_one('td:nth-child(7)').text).strip().replace('/','-')
     closingdate = datetime.datetime.strptime(closingdatestr, '%Y-%m-%d').date()
     # print(companyname,symbol,totalissueunit,issuetype,issuemanager,openingdate,closingdate)
-    # print(f"Company Name: {companyname}\nSymbol: {symbol} \nTotal Issue Unit: {totalissueunit} \nIssue Type: {issuetype} \nIssue Manager: {issuemanager} \nOpening Date: {openingdate} \nClosing Date: {closingdate}\n\n")
+    print(f"Company Name: {companyname}\nSymbol: {symbol} \nTotal Issue Unit: {totalissueunit} \nIssue Type: {issuetype} \nIssue Manager: {issuemanager} \nOpening Date: {openingdate} \nClosing Date: {closingdate}\n\n")
 
     # with open('test.txt', 'a') as f:
     #     f.write(f"Company Name: {companyname}\nSymbol: {symbol} \nTotal Issue Unit: {totalissueunit} \nIssue Type: {issuetype} \nIssue Manager: {issuemanager} \nOpening Date: {openingdate} \nClosing Date: {closingdate}\n\n")
