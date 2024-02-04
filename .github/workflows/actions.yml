@@ -26,4 +26,4 @@ jobs:
     - name: Run Scrapy Crawl
       run: |
         # cd path/to/your/project
-        scrapy crawl ipo
+        python main.py
