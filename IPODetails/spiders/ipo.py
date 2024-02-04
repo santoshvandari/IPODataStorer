@@ -26,7 +26,14 @@ class PwspiderSpider(scrapy.Spider):
 
     def start_requests(self):
         yield scrapy.Request(
-            'https://www.nepsebajar.com/ipo-pipelinewewe', callback=self.parse
+            'https://www.nepsebajar.com/ipo-pipelinewewe',  meta=dict(
+                                playwright=True,
+                                playwright_include_page=True,
+                                playwright_page_methods=[
+                                    # This where we can implement scrolling if we want
+                                    PageMethod('wait_for_selector', 'table#example tbody tr'),
+                                ]
+                            )
         )
 
     async def parse(self, response):
@@ -53,7 +60,6 @@ class PwspiderSpider(scrapy.Spider):
             opening_date = datetime.datetime.strptime(opening_date_str, '%Y-%m-%d').date()
             closing_date_str = data.css('td:nth-child(7)::text').get().replace('/', '-')
             closing_date = datetime.datetime.strptime(closing_date_str, '%Y-%m-%d').date()
-
             # Check if all fields are not empty
             if all([company_name, symbol, total_issue_unit, issue_type, issue_manager, opening_date, closing_date]):
                 if closing_date >= date:
