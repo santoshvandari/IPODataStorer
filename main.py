@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import requests,datetime,psycopg2
 
+# Defining the URL and fetching the data from the website
 url="https://www.nepsebajar.com/ipo-pipelinewewe"
 req=requests.get(url)
 soup=BeautifulSoup(req.text, "html.parser")
@@ -24,6 +25,7 @@ for data in tabledata:
     if counter>=11:
         break
     counter+=1
+    # Retrieving the Data and cleaning it
     companyname = (data.select_one('td:nth-child(1) a').text).strip()
     symbol = (data.select_one('td:nth-child(2) a').text).strip()
     totalissueunit = int((data.select_one('td:nth-child(3)').text).strip())
@@ -46,7 +48,7 @@ for data in tabledata:
     # with open('test.txt', 'a') as f:
     #     f.write(f"Company Name: {companyname}\nSymbol: {symbol} \nTotal Issue Unit: {totalissueunit} \nIssue Type: {issuetype} \nIssue Manager: {issuemanager} \nOpening Date: {openingdate} \nClosing Date: {closingdate}\n\n")
 
-        # check all are not empty
+    # check all are not empty
     if companyname and symbol and totalissueunit and issuetype and issuemanager and openingdate and closingdate:
         # if(closingdate>=date):
         if(True):
