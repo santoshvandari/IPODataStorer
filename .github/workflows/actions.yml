@@ -20,10 +20,11 @@ jobs:
     - name: Install dependencies
       run: |
         pip install -r requirements.txt
-        # playwright install
+        playwright install
         # Additional setup steps if needed
 
     - name: Run Scrapy Crawl
       run: |
         # cd path/to/your/project
-        python main.py
+        # python main.py
+        scrapy crawl ipo
