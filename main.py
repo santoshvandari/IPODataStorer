@@ -1,9 +1,21 @@
 import requests,datetime,psycopg2
 
+connection=None
+cursor=None
+# Connecting to the Database
 def ConnectToDatabase():
-    # Connect to the database
-    pass
+    # Connecting to the Database
+    connectionString = "postgresql://postgres:rnR0uiDqNVWiBL1C@db.xirdbhvrdyarslorlufu.supabase.co:5432/postgres"
+    try:
+        connection = psycopg2.connect(connectionString)
+        cursor = connection.cursor()
+        cursor.execute('truncate ipoinfo;')
+        print("Connected to PostgreSQL database successfully!")
+    except Exception as e:
+        print(f"Error connecting to database: {e}")
+        exit(1)
 
+# Getting the Data from the API
 def get_api_data(api_url):
     try:
         response = requests.get(api_url)
@@ -13,23 +25,24 @@ def get_api_data(api_url):
                 FilterData(data)
             else:
                 print("Error: API Response is NULL")
-                exit(0)
+                exit(1)
         else:
             
             print(f"Error: {response.status_code} - {response.text}")
-            exit(0)
+            exit(1)
 
     except Exception as e:
         print(f"Error: {e}")
-        exit(0)
-
+        exit(1)
+# Handeling the Right Share Data
 def RightShare(data):
     for i in range(len(data)):
         closingdate=data[i]['closing_date']
         if closingdate:
             # closingdate=datetime.date.fromisoformat(closingdate)
             today=datetime.date.today()
-            if closingdate > today:
+            # if closingdate > today:
+            if True:
                 openingdate=data[i]['opening_date']
                 openingdate=datetime.date.fromisoformat(openingdate)
                 totalissueunit=data[i]['units']
@@ -39,26 +52,10 @@ def RightShare(data):
                 issuefor = "General Public"
                 issuemanager = data[i]['issue_manager']
                 if closingdate and openingdate and totalissueunit and companyname and symbol and issuetype and issuefor and issuemanager:
-                    pass
-                    # message=f'''New {issuetype} of {companyname} is opening for {issuefor} from Today with total unit {totalissueunit}. Please Don't miss the chance to apply.
-
-                    # Right Share Information:
-                    # Company Name: {companyname}
-                    # Symbol: {symbol}
-                    # Issue Type: {issuetype}
-                    # Issue For: {issuefor}
-                    # Total Unit: {totalissueunit}
-                    # Issue Manager: {issuemanager}
-                    # Opening Date: {openingdate}
-                    # Closing Date: {closingdate}'''
-                    # print(message)
-
-
+                    WriteToDatabase(closingdate, openingdate, totalissueunit, companyname, symbol, issuetype, issuefor, issuemanager)
+# Handeling the IPO Data
 def IPOHandeling(data):
-    i=0
-    # for i in range(len(data)):
-    if True:
-        print(data[i])
+    for i in range(len(data)):
         # Extracting the Closing Date 
         closingdate = data[i]["closing_date"]
         if closingdate:
@@ -77,23 +74,10 @@ def IPOHandeling(data):
                 issuefor = data[i]["symbol"].split("(")[1].split(")")[0]
                 issuemanager = data[i]['issue_manager']
                 if closingdate and openingdate and totalissueunit and companyname and symbol and issuetype and issuefor and issuemanager:
-                    pass
-                    # message=f'''New {issuetype} of {companyname} is opening for {issuefor} from Today with total unit {totalissueunit}. Please Don't miss the chance to apply.
+                    WriteToDatabase(closingdate, openingdate, totalissueunit, companyname, symbol, issuetype, issuefor, issuemanager)
 
-                    # IPO Information:
-                    # Company Name: {companyname}
-                    # Symbol: {symbol}
-                    # Issue Type: {issuetype}
-                    # Issue For: {issuefor}
-                    # Total Unit: {totalissueunit}
-                    # Issue Manager: {issuemanager}
-                    # Opening Date: {openingdate}
-                    # Closing Date: {closingdate}'''
-                    # print(message)
-
-
+# Haneling the FPO Data
 def FPOHandeling(data):
-    # if True:
     for i in range(len(data)):
         # Extracting the Closing Date 
         closingdate = data[i]["closing_date"]
@@ -113,24 +97,11 @@ def FPOHandeling(data):
                 issuefor = "General Public"
                 issuemanager = data[i]['issue_manager']
                 if closingdate and openingdate and totalissueunit and companyname and symbol and issuetype and issuefor and issuemanager:
-                    pass
-                    # message=f'''New {issuetype} of {companyname} is opening for {issuefor} from Today with total unit {totalissueunit}. Please Don't miss the chance to apply.
-
-                    # FPO Information:
-                    # Company Name: {companyname}
-                    # Symbol: {symbol}
-                    # Issue Type: {issuetype}
-                    # Issue For: {issuefor}
-                    # Total Unit: {totalissueunit}
-                    # Issue Manager: {issuemanager}
-                    # Opening Date: {openingdate}
-                    # Closing Date: {closingdate}'''
-                    # print(message)
+                    WriteToDatabase(closingdate, openingdate, totalissueunit, companyname, symbol, issuetype, issuefor, issuemanager)
 
 
+# Hanelig the Auction Share Data
 def AuctionHandeling(data):
-    # print(data[i])
-    # if True:
     for i in range(len(data)):
         # Extracting the Closing Date 
         closingdate = data[i]["close_date"]
@@ -150,25 +121,10 @@ def AuctionHandeling(data):
                 issuefor = "General Public"
                 issuemanager = data[i]['issue_manager']
                 if closingdate and openingdate and totalissueunit and companyname and symbol and issuetype and issuefor and issuemanager:
-                    pass
-                    # message=f'''New {issuetype} of {companyname} is opening for {issuefor} from Today with total unit {totalissueunit}. Please Don't miss the chance to apply.
+                    WriteToDatabase(closingdate, openingdate, totalissueunit, companyname, symbol, issuetype, issuefor, issuemanager)
 
-                    # FPO Information:
-                    # Company Name: {companyname}
-                    # Symbol: {symbol}
-                    # Issue Type: {issuetype}
-                    # Issue For: {issuefor}
-                    # Total Unit: {totalissueunit}
-                    # Issue Manager: {issuemanager}
-                    # Opening Date: {openingdate}
-                    # Closing Date: {closingdate}'''
-                    # print(message)
-
-
+# Handeling the Mutual Fund Data
 def MutualFundHandeling(data):
-    # i=0
-    # print(data[i]) 
-    # if True:
     for i in range(len(data)):
         closingdate = data[i]["closing_date"]
         if closingdate:
@@ -187,20 +143,7 @@ def MutualFundHandeling(data):
                 issuefor = "General Public"
                 issuemanager = data[i]['issue_manager']
                 if closingdate and openingdate and totalissueunit and companyname and symbol and issuetype and issuefor and issuemanager:
-                    pass
-                    message=f'''New {issuetype} of {companyname} is opening for {issuefor} from Today with total unit {totalissueunit}. Please Don't miss the chance to apply.
-
-                    FPO Information:
-                    Company Name: {companyname}
-                    Symbol: {symbol}
-                    Issue Type: {issuetype}
-                    Issue For: {issuefor}
-                    Total Unit: {totalissueunit}
-                    Issue Manager: {issuemanager}
-                    Opening Date: {openingdate}
-                    Closing Date: {closingdate}'''
-                    print(message)
-
+                   WriteToDatabase(closingdate, openingdate, totalissueunit, companyname, symbol, issuetype, issuefor, issuemanager)
 
 
 
@@ -208,18 +151,23 @@ def FilterData(response):
     # Filter the data
     data = response
     ConnectToDatabase()
-    # RightShare(data["rights"])
-    # IPOHandeling(data["ipo"])
-    # FPOHandeling(data["fpo"])
-    # AuctionHandeling(data["auction"])
+    RightShare(data["rights"])
+    IPOHandeling(data["ipo"])
+    FPOHandeling(data["fpo"])
+    AuctionHandeling(data["auction"])
     MutualFundHandeling(data["mutual_fund"])
    
 
 def WriteToDatabase(closingdate, openingdate, totalissueunit, companyname, symbol, issuetype, issuefor, issuemanager):
     if closingdate and openingdate and totalissueunit and companyname and symbol and issuetype and issuefor and issuemanager:
-        pass
+        # Storing in the Database
+        query=f"INSERT INTO ipoinfo VALUES('{openingdate}',{closingdate},{totalissueunit},'{companyname}','{symbol}','{issuetype}','{issuefor}','{issuemanager}');"
+        print(query)
+        cursor.execute(query)
+    print("Data Written to Database")
+
 
 if __name__ == "__main__":
     api_url="https://www.nepsealpha.com/api/smx9841/investment_calander"
-
     get_api_data(api_url)
+    connection.commit()
