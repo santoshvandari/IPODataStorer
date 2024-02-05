@@ -1,0 +1,26 @@
+name: IPOInfoWriter
+
+on:
+  schedule:
+    - cron: '0 1 * * *'
+
+jobs:
+  run_scrapy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.12  # Replace with your Python version
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+        
+    - name: Run Python Program
+      run: |
+        python main.py
