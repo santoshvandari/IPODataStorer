@@ -24,7 +24,7 @@ def FilterData(response):
     # print(data)
     # filtered_data = [item for item in data if item['status'] == 'active']
     print("Filtered Data:")
-    print(data['ipo'][0]['company_name'])
+    print(data['ipo'])
     # print(filtered_data)
 
 
