@@ -37,7 +37,7 @@ def RightShare(data):
         if closingdate:
             closingdate=datetime.date.fromisoformat(closingdate)
             today=datetime.date.today()
-            if closingdate > today:
+            if closingdate >= today:
             # if True:
                 openingdate=data[i]['opening_date']
                 openingdate=datetime.date.fromisoformat(openingdate)
@@ -58,7 +58,7 @@ def IPOHandeling(data):
             # converting the closing date to date format
             closingdate=datetime.date.fromisoformat(closingdate)
             today=datetime.date.today()
-            if closingdate > today:
+            if closingdate >= today:
             # if True:
                 openingdate = data[i]["opening_date"]
                 # converting the opening date to date format
@@ -81,7 +81,7 @@ def FPOHandeling(data):
             # converting the closing date to date format
             closingdate=datetime.date.fromisoformat(closingdate)
             today=datetime.date.today()
-            if closingdate > today:
+            if closingdate >= today:
             # if True:
                 openingdate = data[i]["opening_date"]
                 # converting the opening date to date format
@@ -105,7 +105,7 @@ def AuctionHandeling(data):
             # converting the closing date to date format
             closingdate=datetime.date.fromisoformat(closingdate)
             today=datetime.date.today()
-            if closingdate > today:
+            if closingdate >= today:
             # if True:
                 openingdate = data[i]["open_date"]
                 # converting the opening date to date format
@@ -127,7 +127,7 @@ def MutualFundHandeling(data):
             # converting the closing date to date format
             closingdate=datetime.date.fromisoformat(closingdate)
             today=datetime.date.today()
-            if closingdate > today:
+            if closingdate >= today:
             # if True:
                 openingdate = data[i]["opening_date"]
                 # converting the opening date to date format
