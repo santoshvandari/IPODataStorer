@@ -1,19 +1,15 @@
 import requests,datetime,psycopg2
 
-connection=None
-cursor=None
 # Connecting to the Database
-def ConnectToDatabase():
-    # Connecting to the Database
-    connectionString = "postgresql://postgres:rnR0uiDqNVWiBL1C@db.xirdbhvrdyarslorlufu.supabase.co:5432/postgres"
-    try:
-        connection = psycopg2.connect(connectionString)
-        cursor = connection.cursor()
-        cursor.execute('truncate ipoinfo;')
-        print("Connected to PostgreSQL database successfully!")
-    except Exception as e:
-        print(f"Error connecting to database: {e}")
-        exit(1)
+connectionString = "postgres://postgres.xirdbhvrdyarslorlufu:9XEq4EPhvJzDXfA7@aws-0-ap-south-1.pooler.supabase.com:5432/postgres"
+try:
+    connection = psycopg2.connect(connectionString)
+    cursor = connection.cursor()
+    cursor.execute('truncate ipodetails;')
+    print("Connected to PostgreSQL database successfully!")
+except Exception as e:
+    print(f"Error connecting to database: {e}")
+    exit(1)
 
 # Getting the Data from the API
 def get_api_data(api_url):
@@ -39,10 +35,10 @@ def RightShare(data):
     for i in range(len(data)):
         closingdate=data[i]['closing_date']
         if closingdate:
-            # closingdate=datetime.date.fromisoformat(closingdate)
+            closingdate=datetime.date.fromisoformat(closingdate)
             today=datetime.date.today()
-            # if closingdate > today:
-            if True:
+            if closingdate > today:
+            # if True:
                 openingdate=data[i]['opening_date']
                 openingdate=datetime.date.fromisoformat(openingdate)
                 totalissueunit=data[i]['units']
@@ -62,8 +58,8 @@ def IPOHandeling(data):
             # converting the closing date to date format
             closingdate=datetime.date.fromisoformat(closingdate)
             today=datetime.date.today()
-            # if closingdate > today:
-            if True:
+            if closingdate > today:
+            # if True:
                 openingdate = data[i]["opening_date"]
                 # converting the opening date to date format
                 openingdate=datetime.date.fromisoformat(openingdate)
@@ -85,8 +81,8 @@ def FPOHandeling(data):
             # converting the closing date to date format
             closingdate=datetime.date.fromisoformat(closingdate)
             today=datetime.date.today()
-            # if closingdate > today:
-            if True:
+            if closingdate > today:
+            # if True:
                 openingdate = data[i]["opening_date"]
                 # converting the opening date to date format
                 openingdate=datetime.date.fromisoformat(openingdate)
@@ -109,8 +105,8 @@ def AuctionHandeling(data):
             # converting the closing date to date format
             closingdate=datetime.date.fromisoformat(closingdate)
             today=datetime.date.today()
-            # if closingdate > today:
-            if True:
+            if closingdate > today:
+            # if True:
                 openingdate = data[i]["open_date"]
                 # converting the opening date to date format
                 openingdate=datetime.date.fromisoformat(openingdate)
@@ -131,8 +127,8 @@ def MutualFundHandeling(data):
             # converting the closing date to date format
             closingdate=datetime.date.fromisoformat(closingdate)
             today=datetime.date.today()
-            # if closingdate > today:
-            if True:
+            if closingdate > today:
+            # if True:
                 openingdate = data[i]["opening_date"]
                 # converting the opening date to date format
                 openingdate=datetime.date.fromisoformat(openingdate)
@@ -143,25 +139,23 @@ def MutualFundHandeling(data):
                 issuefor = "General Public"
                 issuemanager = data[i]['issue_manager']
                 if closingdate and openingdate and totalissueunit and companyname and symbol and issuetype and issuefor and issuemanager:
-                   WriteToDatabase(closingdate, openingdate, totalissueunit, companyname, symbol, issuetype, issuefor, issuemanager)
+                    WriteToDatabase(closingdate, openingdate, totalissueunit, companyname, symbol, issuetype, issuefor, issuemanager)
 
 
 
 def FilterData(response):
     # Filter the data
     data = response
-    ConnectToDatabase()
     RightShare(data["rights"])
     IPOHandeling(data["ipo"])
     FPOHandeling(data["fpo"])
     AuctionHandeling(data["auction"])
     MutualFundHandeling(data["mutual_fund"])
-   
 
 def WriteToDatabase(closingdate, openingdate, totalissueunit, companyname, symbol, issuetype, issuefor, issuemanager):
     if closingdate and openingdate and totalissueunit and companyname and symbol and issuetype and issuefor and issuemanager:
         # Storing in the Database
-        query=f"INSERT INTO ipoinfo VALUES('{openingdate}',{closingdate},{totalissueunit},'{companyname}','{symbol}','{issuetype}','{issuefor}','{issuemanager}');"
+        query=f"INSERT INTO ipodetails(openingdate,closingdate,totalissueunit,companyname,symbol,issuetype,issuefor,issuemanager) VALUES('{openingdate}','{closingdate}',{totalissueunit},'{companyname}','{symbol}','{issuetype}','{issuefor}','{issuemanager}');"
         print(query)
         cursor.execute(query)
     print("Data Written to Database")
