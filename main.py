@@ -29,8 +29,7 @@ def RightShare(data):
         if closingdate:
             # closingdate=datetime.date.fromisoformat(closingdate)
             today=datetime.date.today()
-            # if closingdate > today:
-            if True:
+            if closingdate > today:
                 openingdate=data[i]['opening_date']
                 openingdate=datetime.date.fromisoformat(openingdate)
                 totalissueunit=data[i]['units']
@@ -57,8 +56,9 @@ def RightShare(data):
 
 def IPOHandeling(data):
     i=0
-    for i in range(len(data)):
-        # print(data[i])
+    # for i in range(len(data)):
+    if True:
+        print(data[i])
         # Extracting the Closing Date 
         closingdate = data[i]["closing_date"]
         if closingdate:
@@ -73,7 +73,7 @@ def IPOHandeling(data):
                 totalissueunit = data[i]["units"]
                 companyname = data[i]["company_name"]
                 symbol = data[i]["symbol"].split("(")[0]
-                issuetype='IPO'
+                issuetype='FPO'
                 issuefor = data[i]["symbol"].split("(")[1].split(")")[0]
                 issuemanager = data[i]['issue_manager']
                 if closingdate and openingdate and totalissueunit and companyname and symbol and issuetype and issuefor and issuemanager:
@@ -92,14 +92,47 @@ def IPOHandeling(data):
                     # print(message)
 
 
-def FPOHandeling():
+def FPOHandeling(data):
+    i=0
+    print(data[i])
+    if True:
+        # Extracting the Closing Date 
+        closingdate = data[i]["closing_date"]
+        if closingdate:
+            # converting the closing date to date format
+            closingdate=datetime.date.fromisoformat(closingdate)
+            today=datetime.date.today()
+            # if closingdate > today:
+            if True:
+                openingdate = data[i]["opening_date"]
+                # converting the opening date to date format
+                openingdate=datetime.date.fromisoformat(openingdate)
+                totalissueunit = data[i]["units"]
+                companyname = data[i]["company_name"]
+                symbol = data[i]["symbol"]
+                issuetype='FPO'
+                issuefor = "General Public"
+                issuemanager = data[i]['issue_manager']
+                if closingdate and openingdate and totalissueunit and companyname and symbol and issuetype and issuefor and issuemanager:
+                    pass
+                    # message=f'''New {issuetype} of {companyname} is opening for {issuefor} from Today with total unit {totalissueunit}. Please Don't miss the chance to apply.
+
+                    # FPO Information:
+                    # Company Name: {companyname}
+                    # Symbol: {symbol}
+                    # Issue Type: {issuetype}
+                    # Issue For: {issuefor}
+                    # Total Unit: {totalissueunit}
+                    # Issue Manager: {issuemanager}
+                    # Opening Date: {openingdate}
+                    # Closing Date: {closingdate}'''
+                    # print(message)
+
+
+def AuctionHandeling(data):
     pass
 
-
-def AuctionHandeling():
-    pass
-
-def MutualFundHandeling():
+def MutualFundHandeling(data):
     pass
 
 
@@ -107,14 +140,12 @@ def MutualFundHandeling():
 def FilterData(response):
     # Filter the data
     data = response
-    RightShare(data["rights"])
+    # RightShare(data["rights"])
     # IPOHandeling(data["ipo"])
-    # print(data)
-    # filtered_data = [item for item in data if item['status'] == 'active']
-    # print("Filtered Data:")
-    # print(data['ipo'][0]['company_name'])
-    # print(filtered_data)
-
+    FPOHandeling(data["fpo"])
+    # AuctionHandeling(data["auction"])
+    # MutualFundHandeling(data["mutual_fund"])
+   
 
 def WriteToDatabase():
     pass
