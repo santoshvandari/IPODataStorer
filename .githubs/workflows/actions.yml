@@ -1,26 +1,24 @@
-name: IPOInfoWriter
+name: RunMainPyRegularly
 
 on:
   schedule:
-    - cron: '0 1 * * *'
+    - cron: '0 1 * * *'  # Runs every day at 1:00 AM UTC
 
 jobs:
-  run_scrapy:
+  run_main_py:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: 3.12  # Replace with your Python version
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.1  # Replace '3.x' with your specific Python version
 
-    - name: Install dependencies
-      run: |
-        pip install -r requirements.txt
-        
-    - name: RunPythonProgram
-      run: |
-        python main.py
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run main.py
+        run: python main.py
