@@ -28,13 +28,11 @@ def get_api_data(api_url):
         if response.status_code == 200:
             data=(response.json())["data"]
             if data:     
-                # print(data)       
                 FilterData(data)
             else:
                 print("Error: API Response is NULL")
                 exit(1)
         else:
-            
             print(f"Error: {response.status_code} - {response.text}")
             exit(1)
     except Exception as e:
@@ -60,10 +58,7 @@ def RightShare(data):
                 issuetype='Right Share'
                 issuemanager = data[i]['issueManager']
                 if closingdate and openingdate and totalissueunit and companyname and symbol and issuetype and issuefor and issuemanager:
-                    pass
-                    # print(f"Closig Date : {closingdate}\nOpening Date : {openingdate}\nTotal Issue Unit : {totalissueunit}\nCompany Name : {companyname}\nSymbol : {symbol}\nIssue Type : {issuetype}\nIssue For : {issuefor}\nIssue Manager : {issuemanager}")
-                    # WriteToDatabase(closingdate, openingdate, totalissueunit, companyname, symbol, issuetype, issuefor, issuemanager)
-                    # pass
+                    WriteToDatabase(closingdate, openingdate, totalissueunit, companyname, symbol, issuetype, issuefor, issuemanager)
 
 # Handeling the IPO Data
 def IPOHandeling(data):
@@ -91,10 +86,7 @@ def IPOHandeling(data):
                 issuetype='IPO'
                 issuemanager = data[i]['issueManager']
                 if closingdate and openingdate and totalissueunit and companyname and symbol and issuetype and issuefor and issuemanager:
-                    # pass
-                    # print(closingdate, openingdate, totalissueunit, companyname, symbol, issuetype, issuefor, issuemanager)
-                    # WriteToDatabase(closingdate, openingdate, totalissueunit, companyname, symbol, issuetype, issuefor, issuemanager)
-                    pass
+                    WriteToDatabase(closingdate, openingdate, totalissueunit, companyname, symbol, issuetype, issuefor, issuemanager)
 
 # Handeling the Mutual Fund Data
 def MutualFundHandeling(data):
@@ -105,8 +97,7 @@ def MutualFundHandeling(data):
             # converting the closing date to date format
             closingdate=datetime.date.fromisoformat(closingdate)
             today=datetime.date.today()
-            # if closingdate >= today:
-            if True:
+            if closingdate >= today:
                 openingdate = data[i]["openDate"]
                 # converting the opening date to date format
                 openingdate=datetime.date.fromisoformat(openingdate)
@@ -119,10 +110,7 @@ def MutualFundHandeling(data):
                 if not issuemanager:
                     issuemanager='Self Managed'
                 if closingdate and openingdate and totalissueunit and companyname and symbol and issuetype and issuefor and issuemanager:
-                    pass
-                    print(f"Closig Date : {closingdate}\nOpening Date : {openingdate}\nTotal Issue Unit : {totalissueunit}\nCompany Name : {companyname}\nSymbol : {symbol}\nIssue Type : {issuetype}\nIssue For : {issuefor}\nIssue Manager : {issuemanager}")
-                    # WriteToDatabase(closingdate, openingdate, totalissueunit, companyname, symbol, issuetype, issuefor, issuemanager)
-                    # pass
+                    WriteToDatabase(closingdate, openingdate, totalissueunit, companyname, symbol, issuetype, issuefor, issuemanager)
 
 # Handeling the Debenture Data
 def DebentureHandeling(data):
@@ -133,8 +121,7 @@ def DebentureHandeling(data):
             # converting the closing date to date format
             closingdate=datetime.date.fromisoformat(closingdate)
             today=datetime.date.today()
-            # if closingdate >= today:
-            if True:
+            if closingdate >= today:
                 openingdate = data[i]["openDate"]
                 # converting the opening date to date format
                 openingdate=datetime.date.fromisoformat(openingdate)
@@ -147,34 +134,30 @@ def DebentureHandeling(data):
                 if not issuemanager:
                     issuemanager='Self Managed'
                 if closingdate and openingdate and totalissueunit and companyname and symbol and issuetype and issuefor and issuemanager:
-                    pass
-                    # WriteToDatabase(closingdate, openingdate, totalissueunit, companyname, symbol, issuetype, issuefor, issuemanager)
-                    # pass
-
+                    WriteToDatabase(closingdate, openingdate, totalissueunit, companyname, symbol, issuetype, issuefor, issuemanager)
 
 def FilterData(response):
     # Filter the data
     data = response
-    # print(data)
-    # RightShare(data["Right Share"][0]['open'])
-    # RightShare(data["Right Share"][2]['approved'])
-    # IPOHandeling(data["IPO"][0]["open"])
-    # IPOHandeling(data["IPO"][2]["approved"])
-    # MutualFundHandeling(data["Mutual Fund"][0]['open'])
-    # MutualFundHandeling(data["Mutual Fund"][2]['approved'])
+    RightShare(data["Right Share"][0]['open'])
+    RightShare(data["Right Share"][2]['approved'])
+    IPOHandeling(data["IPO"][0]["open"])
+    IPOHandeling(data["IPO"][2]["approved"])
+    MutualFundHandeling(data["Mutual Fund"][0]['open'])
+    MutualFundHandeling(data["Mutual Fund"][2]['approved'])
+    DebentureHandeling(data["Debentures"][0]['open'])
+    DebentureHandeling(data["Debentures"][2]['approved'])
 
-    DebentureHandeling(data["Debentures"][1]['close'])
-
-# def WriteToDatabase(closingdate, openingdate, totalissueunit, companyname, symbol, issuetype, issuefor, issuemanager):
-#     if closingdate and openingdate and totalissueunit and companyname and symbol and issuetype and issuefor and issuemanager:
-#         # Storing in the Database
-#         query=f"INSERT INTO ipodetails(openingdate,closingdate,totalissueunit,companyname,symbol,issuetype,issuefor,issuemanager) VALUES('{openingdate}','{closingdate}',{totalissueunit},'{companyname}','{symbol}','{issuetype}','{issuefor}','{issuemanager}');"
-#         print(query)
-#         cursor.execute(query)
-#     print("Data Written to Database")
+def WriteToDatabase(closingdate, openingdate, totalissueunit, companyname, symbol, issuetype, issuefor, issuemanager):
+    if closingdate and openingdate and totalissueunit and companyname and symbol and issuetype and issuefor and issuemanager:
+        # Storing in the Database
+        query=f"INSERT INTO ipodetails(openingdate,closingdate,totalissueunit,companyname,symbol,issuetype,issuefor,issuemanager) VALUES('{openingdate}','{closingdate}',{totalissueunit},'{companyname}','{symbol}','{issuetype}','{issuefor}','{issuemanager}');"
+        print(query)
+        cursor.execute(query)
+    print("Data Written to Database")
 
 
 if __name__ == "__main__":
     api_url="https://sarallagani.xyz/api/ipo/get/all"
     get_api_data(api_url)
-    # connection.commit()
+    connection.commit()
