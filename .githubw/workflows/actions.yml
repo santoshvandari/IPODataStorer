@@ -2,7 +2,7 @@ name: IPODataWriter
 
 on:
   schedule:
-    - cron: '0 1 * * *' # Runs at 8:45 AM Nepal Standard Time (UTC +5:45)
+    - cron: '0 1 */2 * *' # Runs at 1:00 AM UTC every 2 days
 
 jobs:
   run-script:
