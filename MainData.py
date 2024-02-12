@@ -1,38 +1,33 @@
-import requests,datetime,psycopg2
+import datetime,psycopg2,os,json
 
 # Connecting to the Database
-# connectionString = "postgres://postgres.xirdbhvrdyarslorlufu:9XEq4EPhvJzDXfA7@aws-0-ap-south-1.pooler.supabase.com:5432/postgres"
-# try:
-#     connection = psycopg2.connect(connectionString)
-#     cursor = connection.cursor()
-#     cursor.execute('truncate ipodetails;')
-#     print("Connected to PostgreSQL database successfully!")
-# except Exception as e:
-#     print(f"Error connecting to database: {e}")
-#     exit(1)
+connectionString = "postgres://postgres.xirdbhvrdyarslorlufu:9XEq4EPhvJzDXfA7@aws-0-ap-south-1.pooler.supabase.com:5432/postgres"
+try:
+    connection = psycopg2.connect(connectionString)
+    cursor = connection.cursor()
+    cursor.execute('truncate ipodetails;')
+    print("Connected to PostgreSQL database successfully!")
+except Exception as e:
+    print(f"Error connecting to database: {e}")
+    exit(1)
 
 # Getting the Data from the API
-def get_api_data(api_url):
-    with open("data.json","r") as f:
-        print(f.read())
-
-    try:
-        pass
-        # response = requests.get(api_url)
-        # if response.status_code == 200:
-        #     if response.json():            
-        #         data=response.json()
-        #         FilterData(data)
-        #     else:
-        #         print("Error: API Response is NULL")
-        #         exit(1)
-        # else:
-            
-        #     print(f"Error: {response.status_code} - {response.text}")
-        #     exit(1)
-
-    except Exception as e:
-        print(f"Error: {e}")
+def get_data(filename):
+    if os.path.exists(filename):
+        try:
+            with open(filename,"r") as f:
+                rawdata=f.read()
+                data=json.loads(rawdata)
+                if data:
+                    FilterData(data)
+                else:
+                    print("Data is Empty")
+                    exit(1)
+        except Exception as e:
+            print(f"Error: {e}")
+            exit(1)
+    else:
+        print(f"File {filename} does not exist")
         exit(1)
 # Handeling the Right Share Data
 def RightShare(data):
@@ -152,28 +147,31 @@ def MutualFundHandeling(data):
 
 
 def FilterData(response):
-    pass
+    # pass
     # Filter the data
-    # data = response
-    # RightShare(data["rights"])
-    # IPOHandeling(data["ipo"])
-    # FPOHandeling(data["fpo"])
-    # AuctionHandeling(data["auction"])
-    # MutualFundHandeling(data["mutual_fund"])
+    data = response
+    RightShare(data["rights"])
+    IPOHandeling(data["ipo"])
+    FPOHandeling(data["fpo"])
+    AuctionHandeling(data["auction"])
+    MutualFundHandeling(data["mutual_fund"])
 
 def WriteToDatabase(closingdate, openingdate, totalissueunit, companyname, symbol, issuetype, issuefor, issuemanager):
+    companyname=companyname.strip()
+    symbol=symbol.strip()
+    issuetype=issuetype.strip()
+    issuefor=issuefor.strip()
+    issuemanager=issuemanager.strip()
+    totalissueunit=totalissueunit.strip()
     if closingdate and openingdate and totalissueunit and companyname and symbol and issuetype and issuefor and issuemanager:
         # Storing in the Database
-        # query=f"INSERT INTO ipodetails(openingdate,closingdate,totalissueunit,companyname,symbol,issuetype,issuefor,issuemanager) VALUES('{openingdate}','{closingdate}',{totalissueunit},'{companyname}','{symbol}','{issuetype}','{issuefor}','{issuemanager}');"
-        # print(query)
-        print(f"Opening Date : {openingdate}\nClosing Date : {closingdate}\nTotal IssueUnit : {totalissueunit}\nCompany Name : {companyname}\nSymbol : {symbol}\nIssue Type : {issuetype}\nIssue For : {issuefor}\n Issue Manager : {issuemanager}")
-        # cursor.execute(query)
+        query=f"INSERT INTO ipodetails(openingdate,closingdate,totalissueunit,companyname,symbol,issuetype,issuefor,issuemanager) VALUES('{openingdate}','{closingdate}',{totalissueunit},'{companyname}','{symbol}','{issuetype}','{issuefor}','{issuemanager}');"
+        print(query)
+        cursor.execute(query)
     print("Data Written to Database")
 
 
 if __name__ == "__main__":
-    api_url="https://www.nepsealpha.com/api/smx9841/investment_calander"
-    # get_api_data(api_url)
+    filename="data.json"
+    get_data(filename)
     # connection.commit()
-    pass
-    get_api_data(api_url)
