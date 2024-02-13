@@ -144,6 +144,26 @@ def MutualFundHandeling(data):
                 if closingdate and openingdate and totalissueunit and companyname and symbol and issuetype and issuefor and issuemanager:
                     WriteToDatabase(closingdate, openingdate, totalissueunit, companyname, symbol, issuetype, issuefor, issuemanager)
 
+# Handeling the Debenture Data
+def DebentureHandeling(data):
+    for i in range(len(data)):
+        closingdate = data[i]["closing_date"]
+        if closingdate:
+            # converting the closing date to date format
+            closingdate=datetime.date.fromisoformat(closingdate)
+            today=datetime.date.today()
+            if closingdate >= today:
+                openingdate = data[i]["opening_date"]
+                # converting the opening date to date format
+                openingdate=datetime.date.fromisoformat(openingdate)
+                totalissueunit = (data[i]["units"]).split(".")[0]
+                companyname = data[i]["company_name"]
+                symbol = data[i]["symbol"]
+                issuetype='Debenture'
+                issuefor = "General Public"
+                issuemanager = data[i]['issue_manager']
+                if closingdate and openingdate and totalissueunit and companyname and symbol and issuetype and issuefor and issuemanager:
+                    WriteToDatabase(closingdate, openingdate, totalissueunit, companyname, symbol, issuetype, issuefor, issuemanager)
 
 
 def FilterData(response):
@@ -155,6 +175,7 @@ def FilterData(response):
     FPOHandeling(data["fpo"])
     AuctionHandeling(data["auction"])
     MutualFundHandeling(data["mutual_fund"])
+    DebentureHandeling(data["bonds_deb"])
 
 def WriteToDatabase(closingdate, openingdate, totalissueunit, companyname, symbol, issuetype, issuefor, issuemanager):
     companyname=companyname.strip()
@@ -174,4 +195,4 @@ def WriteToDatabase(closingdate, openingdate, totalissueunit, companyname, symbo
 if __name__ == "__main__":
     filename="data.json"
     get_data(filename)
-    # connection.commit()
+    connection.commit()
