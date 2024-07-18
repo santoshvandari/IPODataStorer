@@ -1,4 +1,4 @@
-name: IPODATA
+name: IPODATASTORER
 
 on:
   schedule:
