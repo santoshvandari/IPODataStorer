@@ -2,7 +2,7 @@ name: IPODATA
 
 on:
   schedule:
-    - cron: '0 15 * * *' # Runs at 1:00 AM UTC every 2 days
+    - cron: '0 0 * * *' # Runs at 1:00 AM UTC every 2 days
 
 jobs:
   run-script:
@@ -16,4 +16,4 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
       - name: Run Python script
-        run: python mainNepseAlpha.py
+        run: python main.py
