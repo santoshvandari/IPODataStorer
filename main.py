@@ -8,7 +8,7 @@ connectionString = "postgres://postgres.xirdbhvrdyarslorlufu:9XEq4EPhvJzDXfA7@aw
 try:
     connection = psycopg2.connect(connectionString)
     cursor = connection.cursor()
-    cursor.execute('truncate ipoinfodetails;')
+    cursor.execute('truncate ipodetails;')
     print("Connected to PostgreSQL database successfully!")
 except Exception as e:
     print(f"Error connecting to database: {e}")
@@ -175,7 +175,7 @@ def FilterData(response):
 def WriteToDatabase(closingdate, openingdate, totalissueunit, companyname, symbol, issuetype, issuefor, issuemanager):
     if closingdate and openingdate and totalissueunit and companyname and symbol and issuetype and issuefor and issuemanager:
         # Storing in the Database
-        query=f"INSERT INTO ipoinfodetails(openingdate,closingdate,totalissueunit,companyname,symbol,issuetype,issuefor,issuemanager) VALUES('{openingdate}','{closingdate}',{totalissueunit},'{companyname}','{symbol}','{issuetype}','{issuefor}','{issuemanager}');"
+        query=f"INSERT INTO ipodetails(openingdate,closingdate,totalissueunit,companyname,symbol,issuetype,issuefor,issuemanager) VALUES('{openingdate}','{closingdate}',{totalissueunit},'{companyname}','{symbol}','{issuetype}','{issuefor}','{issuemanager}');"
         print(query)
         cursor.execute(query)
     print("Data Written to Database")
