@@ -1,35 +1,46 @@
 import requests,datetime,psycopg2
+import cloudscraper
+import json
+
 
 # Connecting to the Database
 connectionString = "postgres://postgres.xirdbhvrdyarslorlufu:9XEq4EPhvJzDXfA7@aws-0-ap-south-1.pooler.supabase.com:5432/postgres"
 try:
     connection = psycopg2.connect(connectionString)
     cursor = connection.cursor()
-    cursor.execute('truncate ipodetails;')
+    cursor.execute('truncate ipoinfodetails;')
     print("Connected to PostgreSQL database successfully!")
 except Exception as e:
     print(f"Error connecting to database: {e}")
     exit(1)
 
+
+
 # Getting the Data from the API
 def get_api_data(api_url):
     try:
-        response = requests.get(api_url)
-        if response.status_code == 200:
-            if response.json():            
-                data=response.json()
-                FilterData(data)
-            else:
-                print("Error: API Response is NULL")
-                exit(1)
-        else:
-            
-            print(f"Error: {response.status_code} - {response.text}")
-            exit(1)
+        # Create a CloudScraper instance to bypass bot protection
+        scraper = cloudscraper.create_scraper(
+            interpreter="nodejs",
+            delay=10,
+            browser={"browser": "chrome", "platform": "ios", "desktop": False},
+        )
 
+        # Send a GET request to the URL
+        response = scraper.get(api_url)
+
+        # Check if the request was successful
+        if response.status_code == 200:
+            # Return the HTML content of the webpage
+            return response.text
+        else:
+            # Print an error message if the request fails
+            print(f"Failed to fetch URL: {api_url}. Status code: {response.status_code}")
+            return None
     except Exception as e:
-        print(f"Error: {e}")
-        exit(1)
+        # Print an error message if an exception occurs during the request
+        print(f"An error occurred while fetching URL: {api_url}. Error: {str(e)}")
+        return None
 # Handeling the Right Share Data
 def RightShare(data):
     for i in range(len(data)):
@@ -49,6 +60,7 @@ def RightShare(data):
                 issuemanager = data[i]['issue_manager']
                 if closingdate and openingdate and totalissueunit and companyname and symbol and issuetype and issuefor and issuemanager:
                     WriteToDatabase(closingdate, openingdate, totalissueunit, companyname, symbol, issuetype, issuefor, issuemanager)
+
 # Handeling the IPO Data
 def IPOHandeling(data):
     for i in range(len(data)):
@@ -68,8 +80,12 @@ def IPOHandeling(data):
                 totalissueunit = data[i]["units"]
                 companyname = data[i]["company_name"]
                 symbol = data[i]["symbol"].split("(")[0]
-                issuetype='FPO'
-                issuefor = data[i]["symbol"].split("(")[1].split(")")[0]
+                issuetype='IPO'
+                # check the symbols contains ( or not 
+                if data[i]["symbol"].__contains__("("):
+                    issuefor = data[i]["symbol"].split("(")[1].split(")")[0]
+                else:
+                    issuefor="General Public"
                 issuemanager = data[i]['issue_manager']
                 if closingdate and openingdate and totalissueunit and companyname and symbol and issuetype and issuefor and issuemanager:
                     WriteToDatabase(closingdate, openingdate, totalissueunit, companyname, symbol, issuetype, issuefor, issuemanager)
@@ -159,13 +175,18 @@ def FilterData(response):
 def WriteToDatabase(closingdate, openingdate, totalissueunit, companyname, symbol, issuetype, issuefor, issuemanager):
     if closingdate and openingdate and totalissueunit and companyname and symbol and issuetype and issuefor and issuemanager:
         # Storing in the Database
-        query=f"INSERT INTO ipodetails(openingdate,closingdate,totalissueunit,companyname,symbol,issuetype,issuefor,issuemanager) VALUES('{openingdate}','{closingdate}',{totalissueunit},'{companyname}','{symbol}','{issuetype}','{issuefor}','{issuemanager}');"
+        query=f"INSERT INTO ipoinfodetails(openingdate,closingdate,totalissueunit,companyname,symbol,issuetype,issuefor,issuemanager) VALUES('{openingdate}','{closingdate}',{totalissueunit},'{companyname}','{symbol}','{issuetype}','{issuefor}','{issuemanager}');"
         print(query)
         cursor.execute(query)
     print("Data Written to Database")
 
 
 if __name__ == "__main__":
-    api_url="https://www.nepsealpha.com/api/smx9841/investment_calander"
-    get_api_data(api_url)
+    api_url = "https://www.nepsealpha.com/api/smx9841/investment_calander"
+    api_data = get_api_data(api_url)
+    print(f"API Data: \n{api_data}")
+    if api_data:
+        FilterData(json.loads(api_data))
+    else:
+        print("Error fetching API data.")
     connection.commit()
