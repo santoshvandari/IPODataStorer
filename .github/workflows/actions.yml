@@ -2,7 +2,7 @@ name: IPODATA
 
 on:
   schedule:
-    - cron: '0 14 */2 * *' # Runs at 1:00 AM UTC every 2 days
+    - cron: '0 15 * * *' # Runs at 1:00 AM UTC every 2 days
 
 jobs:
   run-script:
