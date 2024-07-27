@@ -184,7 +184,6 @@ def WriteToDatabase(closingdate, openingdate, totalissueunit, companyname, symbo
 if __name__ == "__main__":
     api_url = "https://www.nepsealpha.com/api/smx9841/investment_calander"
     api_data = get_api_data(api_url)
-    print(f"API Data: \n{api_data}")
     if api_data:
         FilterData(json.loads(api_data))
     else:

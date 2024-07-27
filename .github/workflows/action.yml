@@ -2,7 +2,7 @@ name: IPODATASTORER
 
 on:
   schedule:
-    - cron: '0 0 * * *' # Runs at 1:00 AM UTC every 2 days
+    - cron: '0 0 * * *' # Runs at 1:00 AM UTC every days
 
 jobs:
   run-script:
