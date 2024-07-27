@@ -1,3 +1,2 @@
 cloudscraper
 psycopg2-binary
-requests

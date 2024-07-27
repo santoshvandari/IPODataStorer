@@ -1,4 +1,4 @@
-import requests,datetime,psycopg2
+import datetime,psycopg2
 import cloudscraper
 import json
 
