@@ -23,7 +23,9 @@ def get_api_data(api_url):
         scraper = cloudscraper.create_scraper(
             interpreter="nodejs",
             delay=10,
-            browser={"browser": "chrome", "platform": "ios", "desktop": False},
+            browser={
+                'custom': 'ScraperBot/1.0',
+            }
         )
 
         # Send a GET request to the URL
