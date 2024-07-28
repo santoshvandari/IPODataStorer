@@ -82,6 +82,8 @@ def IPOHandeling(data):
                 totalissueunit = data[i]["units"]
                 companyname = data[i]["company_name"]
                 symbol = data[i]["symbol"].split("(")[0]
+                if not companyname:
+                    companyname = symbol
                 issuetype='IPO'
                 # check the symbols contains ( or not 
                 if data[i]["symbol"].__contains__("("):
