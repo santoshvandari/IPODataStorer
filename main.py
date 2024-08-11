@@ -1,5 +1,5 @@
 import datetime,psycopg2
-import cloudscraper
+import cloudscraper,random
 import json
 
 
@@ -8,7 +8,6 @@ connectionString = "postgres://postgres.xirdbhvrdyarslorlufu:9XEq4EPhvJzDXfA7@aw
 try:
     connection = psycopg2.connect(connectionString)
     cursor = connection.cursor()
-    cursor.execute('truncate ipodetails;')
     print("Connected to PostgreSQL database successfully!")
 except Exception as e:
     print(f"Error connecting to database: {e}")
@@ -19,17 +18,34 @@ except Exception as e:
 # Getting the Data from the API
 def get_api_data(api_url):
     try:
+        # List of user agents to rotate
+        user_agents = [
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Safari/605.1.15',
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0'
+        ]
+
         # Create a CloudScraper instance to bypass bot protection
         scraper = cloudscraper.create_scraper(
-            interpreter="nodejs",
             delay=10,
             browser={
                 'custom': 'ScraperBot/1.0',
             }
         )
 
-        # Send a GET request to the URL
-        response = scraper.get(api_url)
+        # Add headers to mimic a real browser request
+        headers = {
+            'User-Agent': random.choice(user_agents),
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Accept-Language': 'en-US,en;q=0.9',
+            'Referer': 'https://www.google.com/',
+            'DNT': '1',  # Do Not Track Request Header
+            'Connection': 'keep-alive'
+        }
+
+        # Send a GET request to the URL with headers
+        response = scraper.get(api_url, headers=headers)
 
         # Check if the request was successful
         if response.status_code == 200:
@@ -37,7 +53,7 @@ def get_api_data(api_url):
             return response.text
         else:
             # Print an error message if the request fails
-            print(f"Failed to fetch URL: {api_url}. Status code: {response.status_code}")
+            print(f"Failed to fetch URL: {api_url} . Status code: {response.status_code}")
             return None
     except Exception as e:
         # Print an error message if an exception occurs during the request
@@ -189,7 +205,9 @@ if __name__ == "__main__":
     api_url = "https://www.nepsealpha.com/api/smx9841/investment_calander"
     api_data = get_api_data(api_url)
     if api_data:
+        cursor.execute('truncate ipodetails;')
         FilterData(json.loads(api_data))
     else:
         print("Error fetching API data.")
     connection.commit()
+    connection.close()
