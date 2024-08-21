@@ -202,12 +202,17 @@ def WriteToDatabase(closingdate, openingdate, totalissueunit, companyname, symbo
 
 
 if __name__ == "__main__":
-    api_url = "https://www.nepsealpha.com/api/smx9841/investment_calander"
-    api_data = get_api_data(api_url)
-    if api_data:
-        cursor.execute('truncate ipodetails;')
-        FilterData(json.loads(api_data))
+    today = datetime.datetime.now().date()
+    if today.strftime("%A") == "Saturday":
+        print("Today is Saturday")
+        exit(0)
     else:
-        print("Error fetching API data.")
+        api_url = "https://www.nepsealpha.com/api/smx9841/investment_calander"
+        api_data = get_api_data(api_url)
+        if api_data:
+            cursor.execute('truncate ipodetails;')
+            FilterData(json.loads(api_data))
+        else:
+            print("Error fetching API data.")
     connection.commit()
     connection.close()
