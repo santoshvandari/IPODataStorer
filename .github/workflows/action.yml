@@ -2,7 +2,8 @@ name: IPODATASTORER
 
 on:
   schedule:
-    - cron: '0 0 * * *' # Runs at 1:00 AM UTC every days
+    # - cron: '0 0 * * *' # Runs at 1:00 AM UTC every days
+    - cron: '0 8 * * *'  # Runs at 8:00 AM UTC, which is 1:45 PM NPT
 
 jobs:
   run-script:

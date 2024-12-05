@@ -54,11 +54,12 @@ def get_api_data(api_url):
         else:
             # Print an error message if the request fails
             print(f"Failed to fetch URL: {api_url} . Status code: {response.status_code}")
-            return None
+            raise Exception(f"Failed to fetch URL: {api_url} . Status code: {response.status_code}")
     except Exception as e:
         # Print an error message if an exception occurs during the request
         print(f"An error occurred while fetching URL: {api_url}. Error: {str(e)}")
-        return None
+        raise Exception(f"An error occurred while fetching URL: {api_url}. Error: {str(e)}")
+        # return None
 # Handeling the Right Share Data
 def RightShare(data):
     for i in range(len(data)):
