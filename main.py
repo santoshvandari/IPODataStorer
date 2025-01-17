@@ -84,8 +84,8 @@ def IPOHandeling(data):
     for i in range(len(data)):
         # Extracting the Closing Date 
         closingdate = data[i]["closing_date"]
-        if data[i]['last_closing_date']:
-            closingdate=data[i]['last_closing_date']
+        # if data[i]['last_closing_date']:
+        #     closingdate=data[i]['last_closing_date']
         if closingdate:
             # converting the closing date to date format
             closingdate=datetime.date.fromisoformat(closingdate)
