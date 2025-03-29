@@ -4,7 +4,7 @@ import json
 
 
 # Connecting to the Database
-connectionString = "postgres://postgres.xirdbhvrdyarslorlufu:9XEq4EPhvJzDXfA7@aws-0-ap-south-1.pooler.supabase.com:5432/postgres"
+connectionString = "<YOUR DATABASE CONNECTION STRING>"
 try:
     connection = psycopg2.connect(connectionString)
     cursor = connection.cursor()
@@ -207,7 +207,7 @@ if __name__ == "__main__":
         print("Today is Saturday")
         exit(0)
     else:
-        api_url = "https://www.nepsealpha.com/api/smx9841/investment_calander"
+        api_url = "<YOUR API URL>"
         api_data = get_api_data(api_url)
         if api_data:
             cursor.execute('truncate ipodetails;')
