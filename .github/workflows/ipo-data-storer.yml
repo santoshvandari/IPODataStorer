@@ -1,0 +1,45 @@
+name: IPO Data Storer
+
+on:
+  schedule:
+    - cron: '0 0 * * 1,4'  # Runs at midnight UTC on Monday and Thursday
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Python environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Run IPO Data Storer
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+          COLLECTION_NAME: ${{ secrets.COLLECTION_NAME }}
+          LOG_LEVEL: INFO
+          MAX_RETRIES: 3
+          USE_LOCAL_FILES: false
+        run: python main.py
+      
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: error-logs
+          path: |
+            *.log
+            *.txt
+          retention-days: 7
