@@ -334,7 +334,7 @@ async def main() -> None:
 
         # Update database
         if all_filtered_data:
-            await update_insert_data_in_mongodb(db, COLLECTION_NAME, all_filtered_data)
+            await update_insert_data_in_mongodb(db, "upcoming_ipodetails", all_filtered_data)
             logger.info(
                 f"Successfully processed {len(all_filtered_data)} active IPO/FPO/Bond records"
             )
