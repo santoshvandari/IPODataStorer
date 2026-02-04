@@ -1,3 +1,5 @@
 cloudscraper
 motor
 python-dotenv
+python-telegram-bot
+tenacity

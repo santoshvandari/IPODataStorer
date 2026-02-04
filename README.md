@@ -65,7 +65,13 @@ USE_LOCAL_FILES=true python main.py
 
 ### Running with GitHub Actions
 
-The application includes a GitHub Actions workflow that runs automatically every day at midnight UTC.
+The application includes two GitHub Actions workflows:
+
+#### 1. IPO Data Collection (ipo-data-storer.yml)
+Runs **twice a week** (Monday and Thursday) to fetch and store IPO data.
+
+#### 2. Telegram Notifications (telegram-notifications.yml)
+Runs **daily at 8:15 AM Nepal Time** to send opening/closing notifications.
 
 **Setup GitHub Secrets:**
 
@@ -73,6 +79,12 @@ The application includes a GitHub Actions workflow that runs automatically every
 2. Add the following secrets:
    - `MONGODB_URI`: Your MongoDB connection string
    - `DATABASE_NAME`: Your database name
+   - `TELEGRAM_BOT_TOKEN`: Your Telegram bot token
+   - `CHANNEL_ID`: Your Telegram channel ID
+   - `COLLECTION_NAME`: (Optional) Collection name (defaults to "upcoming_ipodetails")
+
+**Manual Trigger:**
+You can manually trigger either workflow from the Actions tab in your GitHub repository.
 
 ## Contributing
 
