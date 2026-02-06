@@ -1,6 +1,8 @@
 name: Telegram Notifications
 
 on:
+  push:
+      branches: [ main ]  # Add this!
   schedule:
     - cron: '34 2 * * *'  # Runs at 8:15 AM Nepal Time (2:30 AM UTC + 5:45 = 8:15 AM NPT)
   workflow_dispatch:  # Allow manual triggering
